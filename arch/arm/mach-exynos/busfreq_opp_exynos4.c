@@ -491,7 +491,6 @@ void exynos_request_apply(unsigned long freq)
 
 	opp = bus_ctrl.data->curr_opp;
 
-
 	opp = opp_find_freq_ceil(bus_ctrl.data->dev, &freq);
 
 	if (bus_ctrl.opp_lock)
@@ -513,7 +512,7 @@ static __devinit int exynos_busfreq_probe(struct platform_device *pdev)
 	struct busfreq_data *data;
 	unsigned int val = 0;
 
-#if defined (CONFIG_ARM_TRUSTZONE) && !defined(CONFIG_MACH_STUTTGART)  /* jeff, on stuttgart, DMC registers are not in TZ memory*/
+#ifdef CONFIG_ARM_TRUSTZONE
 	exynos_smc_readsfr(EXYNOS4_PA_DMC0_4212 + 0x4, &val);
 #else
 	val = __raw_readl(S5P_VA_DMC0 + 0x4);
