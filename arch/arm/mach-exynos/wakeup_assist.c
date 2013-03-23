@@ -13,19 +13,12 @@
 #include <linux/io.h>
 #include <mach/regs-pmu.h>
 
-/* jeff, regulator, TODO: it will remove later, because these regulator should be control by driver*/
-#if defined(CONFIG_MACH_STUTTGART) && defined(CONFIG_REGULATOR)
-#include <linux/regulator/machine.h>
-#endif
-/* end */
-
 #define DEV_NAME "wakeup_assist"
 
 static int wakeup_assist_keycode[] = { KEY_POWER };
 
 static int __devinit wakeup_assist_probe(struct platform_device *pdev)
 {
-#if 0
 	int error;
 	struct input_dev *input_dev;
 
@@ -56,34 +49,23 @@ static int __devinit wakeup_assist_probe(struct platform_device *pdev)
 	}
 
 	platform_set_drvdata(pdev, input_dev);
-#endif
+
 	return 0;
 }
 
 static int __devexit wakeup_assist_remove(struct platform_device *pdev)
 {
-#if 0
 	struct input_dev *input_dev = platform_get_drvdata(pdev);
 
 	platform_set_drvdata(pdev, NULL);
 	input_unregister_device(input_dev);
 	input_free_device(input_dev);
-#endif
+
 	return 0;
 }
 
-/* jeff, enable regulator, TODO: it will remove later, because these regulator should be control by driver*/
-#if defined(CONFIG_MACH_STUTTGART) && defined(CONFIG_REGULATOR)
-static int wakeup_assist_suspend(struct device *dev)
-{
-	regulator_suspend_prepare(PM_SUSPEND_MEM);
-}
-#endif
-/*end*/
-
 static int wakeup_assist_resume(struct device *dev)
 {
-#if 0 //jeff
 	struct platform_device *pdev = to_platform_device(dev);
 	struct input_dev *input_dev = platform_get_drvdata(pdev);
 
@@ -93,17 +75,11 @@ static int wakeup_assist_resume(struct device *dev)
 		input_report_key(input_dev, wakeup_assist_keycode[0], 0x0);
 		input_sync(input_dev);
 	}
-#endif
-/* jeff, enable regulator, TODO: it will remove later, because these regulator should be control by driver*/
-#if defined(CONFIG_MACH_STUTTGART) && defined(CONFIG_REGULATOR)
-	regulator_suspend_finish();
-#endif
-/* end */
+
 	return 0;
 }
 
 static const struct dev_pm_ops wakeup_assist_pm_ops = {
-	.suspend		= wakeup_assist_suspend,
 	.resume		= wakeup_assist_resume,
 };
 
